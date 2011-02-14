@@ -22,15 +22,20 @@ class YouTubeG
         @offset, @query, 
         @response_format, @video_format, 
         @racy, @author = nil
-        @url = base_url
         
-        # Return a single video (base_url + /T7YazwP8GtY)
-        return @url << "/" << params[:video_id] if params[:video_id]
+        if params[:playlist]
+          @url = base_url << "playlists/#{params.delete(:playlist)}"
+        else
+          @url = base_url << 'videos'
+          
+          # Return a single video (base_url + /T7YazwP8GtY)
+          return @url << "/" << params[:video_id] if params[:video_id]
+          
+          @url << "/-/" if (params[:categories] || params[:tags])
+          @url << categories_to_params(params.delete(:categories)) if params[:categories]
+          @url << tags_to_params(params.delete(:tags)) if params[:tags]
+        end
         
-        @url << "/-/" if (params[:categories] || params[:tags])
-        @url << categories_to_params(params.delete(:categories)) if params[:categories]
-        @url << tags_to_params(params.delete(:tags)) if params[:tags]
-
         set_instance_variables(params)
         
         if( params[ :only_embeddable ] )
@@ -41,10 +46,6 @@ class YouTubeG
       end
       
       private
-      
-      def base_url
-        super << "videos"
-      end
       
       def to_youtube_params
         {

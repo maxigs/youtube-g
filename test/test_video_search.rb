@@ -81,6 +81,11 @@ class TestVideoSearch < Test::Unit::TestCase
   
   # -- Complex Video Queries -------------------------------------------------------------------------
   
+  def test_should_build_url_for_playlist
+    request = YouTubeG::Request::VideoSearch.new(:playlist => 'stuff')
+    assert_equal "http://gdata.youtube.com/feeds/api/playlists/stuff", request.url
+  end
+  
   def test_should_build_url_for_boolean_or_case_for_categories
     request = YouTubeG::Request::VideoSearch.new(:categories => { :either => [:news, :sports] })
     assert_equal "http://gdata.youtube.com/feeds/api/videos/-/News%7CSports/", request.url

@@ -19,10 +19,10 @@ class YouTubeG
       end
 
     protected
-      def parse_entry(entry) 
+      def parse_entry(entry)
         video_id = entry.elements["id"].text
-        published_at = Time.parse(entry.elements["published"].text)
         updated_at = Time.parse(entry.elements["updated"].text)
+        published_at = Time.parse(entry.elements["published"].text) rescue updated_at
 
         # parse the category and keyword lists
         categories = []
